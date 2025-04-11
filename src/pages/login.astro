@@ -1,27 +1,35 @@
 ---
-/* import AuthForm from "../components/AuthForm.astro";
+// src/pages/login.astro
+
+import AuthForm from "@/components/AuthForm.astro";
+import { supabase } from "@lib/supabase";
+
+
+
 
 if (Astro.locals.user) {
   return Astro.redirect("/docs");
-} */
-
-// Verificación tipada correctamente
-import AuthForm from "../components/AuthForm.astro";
-if (Astro.locals.user?.id) {
-  return Astro.redirect("/docs");
 }
+
+const error = Astro.url.searchParams.get("error");
 ---
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Iniciar Sesión | Avanze Docs</title>
+  <style>
+    .gradient-bg {
+      background: linear-gradient(120deg, #4f46e5, #10b981);
+    }
+  </style>
 </head>
-<body>
-  <main class="min-h-screen bg-gray-50 flex items-center justify-center">
-    <AuthForm view="login" />
+<body class="min-h-screen gradient-bg flex items-center justify-center p-4">
+  <main class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Avanze Docs</h1>
+    <AuthForm view="login" error={error} />
   </main>
 </body>
 </html>

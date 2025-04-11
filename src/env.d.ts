@@ -1,10 +1,10 @@
 /// <reference types="astro/client" />
-import type { User } from "./database.types";
+import type { User } from "@supabase/supabase-js";
 
 declare global {
   namespace Astro {
     interface Locals {
-      user: User | null; // Usa el User del schema de Supabase
+      user: User | null;
     }
   }
 }

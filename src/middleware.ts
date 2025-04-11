@@ -1,28 +1,33 @@
-import { supabase } from "../src/lib/supabase.js"; 
-
 import { defineMiddleware } from "astro:middleware";
-import type { User } from "@supabase/supabase-js"; // Tipo de Auth
+import { supabase } from "@lib/supabase"; // Usando alias configurado
+import type { User } from "@supabase/supabase-js";
 
-export const onRequest = defineMiddleware(async ({ locals, cookies, request },next) => {
+export const onRequest = defineMiddleware(async ({ locals, cookies, request, redirect }, next ) => {
   const accessToken = cookies.get("sb-access-token");
   const refreshToken = cookies.get("sb-refresh-token");
 
+  // Resetear el usuario en cada request
   locals.user = null;
 
-  if (accessToken && refreshToken) {
+  // Intentar recuperar la sesión
+  if (accessToken?.value && refreshToken?.value) {
     const { data: { user }, error } = await supabase.auth.setSession({
-      refresh_token: refreshToken.value,
       access_token: accessToken.value,
+      refresh_token: refreshToken.value,
     });
 
-    if (user) locals.user = user; // ¡Sin necesidad de casteo!
+    if (!error && user) {
+      locals.user = user; // Tipo User de @supabase/supabase-js
+    }
   }
 
-  // Redirigir si no está autenticado
+  // Redirigir si la ruta está protegida y no hay usuario
+  const protectedPaths = ["/docs"];
   const url = new URL(request.url);
-  if (url.pathname.startsWith("/docs") && !locals.user) {
-    return Response.redirect(new URL("/login", url.origin));
+  
+  if (protectedPaths.some(path => url.pathname.startsWith(path)) && !locals.user) {
+    return redirect("/login");
   }
 
-  return next();
+  return await next();
 });
