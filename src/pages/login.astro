@@ -1,7 +1,13 @@
 ---
-import AuthForm from "../components/AuthForm.astro";
+/* import AuthForm from "../components/AuthForm.astro";
 
 if (Astro.locals.user) {
+  return Astro.redirect("/docs");
+} */
+
+// Verificación tipada correctamente
+import AuthForm from "../components/AuthForm.astro";
+if (Astro.locals.user?.id) {
   return Astro.redirect("/docs");
 }
 ---
