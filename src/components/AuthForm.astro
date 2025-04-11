@@ -1,0 +1,68 @@
+---
+// Interface de props
+interface Props {
+  view: "login" | "signup";
+}
+
+const { view } = Astro.props;
+const error = new URL(Astro.request.url).searchParams.get("error");
+---
+
+<div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+  {error && (
+    <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+      {decodeURIComponent(error)}
+    </div>
+  )}
+
+  <form 
+    method="POST" 
+    action={`/auth/${view}`} 
+    class="space-y-4"
+    id="auth-form"
+  >
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+      />
+    </div>
+
+    <div>
+      <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        required
+        minlength="6"
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+      />
+    </div>
+
+    <button
+      type="submit"
+      class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+    >
+      {view === "login" ? "Iniciar sesión" : "Registrarse"}
+    </button>
+  </form>
+
+  <div class="mt-4 text-center">
+    {view === "login" ? (
+      <p class="text-sm text-gray-600">
+        ¿No tienes cuenta?{' '}
+        <a href="/signup" class="text-blue-600 hover:text-blue-500">Regístrate aquí</a>
+      </p>
+    ) : (
+      <p class="text-sm text-gray-600">
+        ¿Ya tienes cuenta?{' '}
+        <a href="/login" class="text-blue-600 hover:text-blue-500">Inicia sesión</a>
+      </p>
+    )}
+  </div>
+</div>
