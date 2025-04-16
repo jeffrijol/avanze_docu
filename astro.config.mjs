@@ -4,6 +4,10 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
+	output: 'server',
+	redirects: {
+	  '/signup': '/docs' // Redirige a la documentación
+	},
 	integrations: [
 		starlight({
 			title: 'My Docs',
