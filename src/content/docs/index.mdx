@@ -1,9 +1,9 @@
 ---
-title: Bienvenido a la doc de Avanze
-description: Guía de documentación de la organización de Avanze Soluciones.
+title: Welcome to Starlight
+description: Get started building your docs site with Starlight.
 template: splash
 hero:
-  tagline: Toda la documentación según la organización seleccionada!
+  tagline: Congrats on setting up a new Starlight project!
   image:
     file: ../../assets/houston.webp
   actions:
@@ -16,32 +16,21 @@ hero:
       variant: minimal
 ---
 
----
-// src/content/docs/index.mdx
-import { supabase } from '../../lib/supabase';
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
-// Obtener usuario de forma compatible con MDX
-const { data } = await supabase.auth.getUser();
-const user = data?.user;
----
+## Next steps
 
 <CardGrid stagger>
-  {user ? (
-    
-
-   
-
-    
 	<Card title="Update content" icon="pencil">
 		Edit `src/content/docs/index.mdx` to see this page change.
 	</Card>
-  ) : (
-    <div class="text-center py-8">
-      <h2 class="text-xl font-bold mb-4">Acceso Restringido</h2>
-      <p class="mb-4">Debes iniciar sesión para acceder a la documentación.</p>
-      <a href="/login" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-        Iniciar Sesión
-      </a>
-    </div>
-  )}
+	<Card title="Add new content" icon="add-document">
+		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	</Card>
+	<Card title="Configure your site" icon="setting">
+		Edit your `sidebar` and other config in `astro.config.mjs`.
+	</Card>
+	<Card title="Read the docs" icon="open-book">
+		Learn more in [the Starlight Docs](https://starlight.astro.build/).
+	</Card>
 </CardGrid>
