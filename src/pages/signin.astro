@@ -1,0 +1,86 @@
+---
+// Página de inicio de sesión
+import { supabase } from '../lib/supabase';
+
+let email = '';
+let password = '';
+let errorMessage = '';
+let successMessage = '';
+
+// Manejar envío del formulario
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  email = formData.get('email')?.toString() || '';
+  password = formData.get('password')?.toString() || '';
+  
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    errorMessage = `Error: ${error.message}`;
+  } else {
+    successMessage = `¡Bienvenido ${data.user?.email}!`;
+  }
+}
+---
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Acceso - Avanze Docs</title>
+  <style>
+    .auth-container {
+      max-width: 400px;
+      margin: 2rem auto;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <h1>Acceso a la plataforma</h1>
+    
+    <form method="POST">
+      <div>
+        <label>Correo electrónico:</label>
+        <input 
+          type="email" 
+          name="email" 
+          required
+          class="input-field"
+          value={email}
+        >
+      </div>
+
+      <div>
+        <label>Contraseña:</label>
+        <input 
+          type="password" 
+          name="password" 
+          required
+          class="input-field"
+        >
+      </div>
+
+      <button type="submit" class="submit-btn">Ingresar</button>
+    </form>
+
+    {errorMessage && <div class="error-message">{errorMessage}</div>}
+    {successMessage && <div class="success-message">{successMessage}</div>}
+  </div>
+
+  <script>
+    // Mostrar alertas después del procesamiento
+    document.addEventListener('DOMContentLoaded', () => {
+      const error = document.querySelector('.error-message');
+      const success = document.querySelector('.success-message');
+      
+      if (error?.textContent) alert(error.textContent);
+      if (success?.textContent) alert(success.textContent);
+    });
+  </script>
+</body>
+</html>
